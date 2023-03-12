@@ -1,56 +1,28 @@
-import Container from '../components/container'
-import MoreStories from '../components/more-stories'
-import HeroPost from '../components/hero-post'
-import Intro from '../components/intro'
-import Layout from '../components/layout'
-import { getAllPosts } from '../lib/api'
 import Head from 'next/head'
-import { CMS_NAME } from '../lib/constants'
-import Post from '../interfaces/post'
+import { FaFilePdf } from "react-icons/fa";
+import { useRouter } from "next/router";
 
-type Props = {
-  allPosts: Post[]
+export default function Index({props}) {
+    const router = useRouter()
+    return (
+        <>
+            <Head>
+                <title>{`HOME`}</title>
+            </Head>
+            <div>
+                <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+                    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+                        <button
+                            onClick={() => router.push('/concat')}
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        >
+                            PDF Concatenator
+                            <FaFilePdf className="inline-block ml-2"/> +<FaFilePdf className="inline-block ml-2"/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </>
+    )
 }
 
-export default function Index({ allPosts }: Props) {
-  const heroPost = allPosts[0]
-  const morePosts = allPosts.slice(1)
-  return (
-    <>
-      <Layout>
-        <Head>
-          <title>{`Next.js Blog Example with ${CMS_NAME}`}</title>
-        </Head>
-        <Container>
-          <Intro />
-          {heroPost && (
-            <HeroPost
-              title={heroPost.title}
-              coverImage={heroPost.coverImage}
-              date={heroPost.date}
-              author={heroPost.author}
-              slug={heroPost.slug}
-              excerpt={heroPost.excerpt}
-            />
-          )}
-          {morePosts.length > 0 && <MoreStories posts={morePosts} />}
-        </Container>
-      </Layout>
-    </>
-  )
-}
-
-export const getStaticProps = async () => {
-  const allPosts = getAllPosts([
-    'title',
-    'date',
-    'slug',
-    'author',
-    'coverImage',
-    'excerpt',
-  ])
-
-  return {
-    props: { allPosts },
-  }
-}
